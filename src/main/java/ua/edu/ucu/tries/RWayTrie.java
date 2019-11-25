@@ -4,6 +4,7 @@ import ua.edu.ucu.collections.Queue;
 import java.lang.*;
 import java.util.*;
 
+
 public class RWayTrie implements Trie {
 
     static class Node {
@@ -45,6 +46,7 @@ public class RWayTrie implements Trie {
             newNext[this.next.length] = next;
             this.next = Arrays.copyOf(newNext, newNext.length);
         }
+
 
         public void addNexts(Node[] next) {
 
@@ -155,28 +157,27 @@ public class RWayTrie implements Trie {
         Queue q = new Queue();
         ArrayList<String> res = new ArrayList<>();
 
-        String new_s = "";
+
         Node curr = this.root;
 
         for (int i = 0; i < s.length(); i++){
             if (curr.getNext(s.charAt(i) - 97) == null) {
                 return null;
             }
-
             curr = curr.getNext(s.charAt(i) - 97);
         }
-        this.toQu(q, new_s,curr);
+
+        this.toQu(q, s,curr);
 
 
-        for (int i = 0; i < q.size(); i++) {
-            String sym = ""+q.dequeue();
-            res.add(s+sym);
+        String queue = q.toString();
+        for (String word : queue.split(", ")) {
+
+            res.add(word);
 
         }
         return res;
     }
-
-
 
     private void toQu(Queue qu, String str, Node curr) {
 
@@ -185,7 +186,6 @@ public class RWayTrie implements Trie {
 
         for (int i = 0; i < curr.getNext().length; i++)
             toQu(qu, str + "" + (char)(i+97), curr.getNext(i));
-
     }
 
     @Override
@@ -193,5 +193,4 @@ public class RWayTrie implements Trie {
         return this.size;
         //throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }
