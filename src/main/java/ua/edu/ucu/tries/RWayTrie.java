@@ -4,8 +4,6 @@ import ua.edu.ucu.collections.Queue;
 import java.lang.*;
 import java.util.*;
 
-
-
 public class RWayTrie implements Trie {
 
     static class Node {
@@ -17,40 +15,38 @@ public class RWayTrie implements Trie {
             this.value = -1;
         }
 
-        public Node(int value){
+        public Node(int value) {
             this.value = value;
         }
 
-        public int getValue(){
+        public int getValue() {
             return this.value;
         }
 
-        public void setValue(int value){
+        public void setValue(int value) {
             this.value = value;
         }
 
-        public Node[] getNext(){
+        public Node[] getNext() {
             return this.next;
         }
 
-        public Node getNext(int index){
-            if (index >= this.next.length){
+        public Node getNext(int index) {
+            if (index >= this.next.length) {
                 throw new IndexOutOfBoundsException("Unable to add element: index is out of bounds!");
             }
             return this.next[index];
         }
 
 
-        public void addNext(Node next){
+        public void addNext(Node next) {
 
             Node[] newNext = Arrays.copyOf(this.next, this.next.length+1);
             newNext[this.next.length] = next;
             this.next = Arrays.copyOf(newNext, newNext.length);
-
-
         }
 
-        public void addNexts(Node[] next){
+        public void addNexts(Node[] next) {
 
             Node[] newNext = new Node[this.next.length+next.length];
 
@@ -60,19 +56,14 @@ public class RWayTrie implements Trie {
             }
 
             this.next = Arrays.copyOf(newNext, newNext.length);
-
         }
 
-        public void setNext(Node node, int index){
-            if (index >= this.next.length){
+        public void setNext(Node node, int index) {
+            if (index >= this.next.length) {
                 throw new IndexOutOfBoundsException("Unable to add element: index is out of bounds!");
             }
             this.next[index] = node;
-
         }
-
-
-
     }
 
     private Node root;
@@ -80,12 +71,12 @@ public class RWayTrie implements Trie {
     private int max;
 
 
-    public RWayTrie(){
+    public RWayTrie() {
         this.root = new Node();
         this.size = 0;
     }
 
-    public RWayTrie(Node node){
+    public RWayTrie(Node node) {
         this.root = node;
         this.size = 0;
     }
@@ -97,25 +88,19 @@ public class RWayTrie implements Trie {
         Node prev;
         String word = t.term;
         String str = "";
-        for (int i = 0; i < word.length(); i++){
+        for (int i = 0; i < word.length(); i++) {
 
-            if (curr.getNext(word.charAt(i) - 97) == null){
+            if (curr.getNext(word.charAt(i) - 97) == null) {
                 curr.setNext(new Node(), word.charAt(i) - 97);
             }
             prev = curr;
             curr = curr.getNext(word.charAt(i) - 97);
-
-
-
         }
-        if (t.weight > this.max){
+        if (t.weight > this.max) {
             this.max = t.weight;
         }
         curr.setValue(this.size);
         this.size++;
-
-
-
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -124,20 +109,16 @@ public class RWayTrie implements Trie {
         Node curr = this.root;
         Node[] next;
 
-        for (int i = 0; i < word.length(); i++){
-            if (curr.getNext(word.charAt(i) - 97) == null){
+        for (int i = 0; i < word.length(); i++) {
+            if (curr.getNext(word.charAt(i) - 97) == null) {
                 return false;
             }
             curr = curr.getNext(word.charAt(i) - 97);
-
-
         }
-        if (curr.getValue() == -1){
+        if (curr.getValue() == -1) {
             return false;
         }
         return true;
-
-
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -146,15 +127,13 @@ public class RWayTrie implements Trie {
 
         Node curr = this.root;
 
-        for (int i = 0; i < word.length(); i++){
-            if (curr.getNext(word.charAt(i) - 97) == null){
+        for (int i = 0; i < word.length(); i++) {
+            if (curr.getNext(word.charAt(i) - 97) == null) {
                 return false;
             }
             curr = curr.getNext(word.charAt(i) - 97);
-
-
         }
-        if (curr.getValue() == -1){
+        if (curr.getValue() == -1) {
             return false;
         }
         else {
@@ -180,13 +159,13 @@ public class RWayTrie implements Trie {
         Node curr = this.root;
 
         for (int i = 0; i < s.length(); i++){
-            if (curr.getNext(s.charAt(i) - 97) == null){
+            if (curr.getNext(s.charAt(i) - 97) == null) {
                 return null;
             }
 
             curr = curr.getNext(s.charAt(i) - 97);
         }
-        q = this.toQu(q, new_s,curr);
+        this.toQu(q, new_s,curr);
 
 
         for (int i = 0; i < q.size(); i++) {
@@ -199,28 +178,14 @@ public class RWayTrie implements Trie {
 
 
 
-    private Queue toQu(Queue qu, String str, Node curr){
+    private void toQu(Queue qu, String str, Node curr) {
 
-        for (int i = 0; i< curr.getNext().length; i++){
-            if (curr.getNext(i) != null){
-                if (curr.getNext(i).getValue() == -1){
-                    str = str + "" + (char)(i+97);
+        if (curr == null) return;
+        if (curr.getValue() != -1) qu.enqueue(str);
 
-                    qu = toQu(qu,str,curr.getNext(i));
-                }
-                else if (curr.getNext(i).getValue() != -1){
-                    str = str+ "" + (char)(i+97);
-                    qu.enqueue(str);
-                    qu = toQu(qu,str,curr.getNext(i));
+        for (int i = 0; i < curr.getNext().length; i++)
+            toQu(qu, str + "" + (char)(i+97), curr.getNext(i));
 
-                }
-
-
-            }
-
-        }
-
-        return qu;
     }
 
     @Override
